@@ -1,26 +1,95 @@
 import Heroes.*;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Random;
+import java.util.Scanner;
+
 public class main {
-    public static void Main(String[] args) {
-        BaseHero hero1 = new magician();
-        System.out.println(hero1.getInfo());
-        
-        BaseHero hero2 = new peasant();
-        System.out.println(hero2.getInfo());
+    static final int UNITS = 10;
+    public static ArrayList<human> allTeam = new ArrayList<>();
+    public static ArrayList<human> holyTeam = new ArrayList<>();
+    public static ArrayList<human> darkTeam = new ArrayList<>();
 
-        BaseHero hero3 = new spearman();
-        System.out.println(hero3.getInfo());
+    public static void main(String[] args) {
+        try (Scanner user_input = new Scanner(System.in)) {
+            System.out.print("Press Enter to begin.");
+            user_input.nextLine();
+            createTeam(holyTeam, 0, 1);
+            createTeam(darkTeam, 3, 10);
+            allTeam.addAll(holyTeam);
+            allTeam.addAll(darkTeam);
+            sortTeam(allTeam);
+            boolean a = true;
+            int countBlue = 0;
+            int countGreen = 0;
+            while (a) {
+                view.view();
+                user_input.nextLine();
+                countBlue = 0;
+                countGreen = 0;
+                for (human human : allTeam) {
+                    if (holyTeam.contains(human)) {
+                        if (human.step(holyTeam, darkTeam))
+                            countBlue++;
+                    } else {
+                        if ((human.step(darkTeam, holyTeam)))
+                            countGreen++;
+                    };
+                }
+                if (countBlue == UNITS || countGreen == UNITS)
+                    a = false;
+            }
+            if (countBlue == UNITS)
+                System.out.print("greenTeam wins");
+            else {
+                System.out.print("blueTeam wins");
+            }
+        }
+    }
 
-        BaseHero hero4 = new outlaw();
-        System.out.println(hero4.getInfo());
+    static void createTeam(ArrayList team, int offset, int posY) {
+        for (int i = 0; i < UNITS; i++) {
+            int rnd = new Random().nextInt(4) + offset;
+            switch (rnd) {
+                case (0):
+                    team.add(new sniper(getName(), new Vector2D(i + 1, posY)));
+                    break;
+                case (1):
+                    team.add(new bandit(getName(), new Vector2D(i + 1, posY)));
+                    break;
+                case (2):
+                    team.add(new witch(getName(), new Vector2D(i + 1, posY)));
+                    break;
+                case (3):
+                    team.add(new farmer(getName(), new Vector2D(i + 1, posY)));
+                    break;
+                case (4):
+                    team.add(new crossbowman(getName(), new Vector2D(i + 1, posY)));
+                    break;
+                case (5):
+                    team.add(new monk(getName(), new Vector2D(i + 1, posY)));
+                    break;
+                case (6):
+                    team.add(new spearman(getName(), new Vector2D(i + 1, posY)));
+                    break;
+            }
+        }
+    }
 
-        BaseHero hero5 = new sniper();
-        System.out.println(hero5.getInfo());
+    static void sortTeam(ArrayList<human> team) {
+        team.sort(new Comparator<human>() {
+            @Override
+            public int compare(human t0, human t1) {
+                if (t1.getSpeed() == t0.getSpeed())
+                    return (int) (t1.getHp() - t0.getHp());
+                else
+                    return (int) (t1.getSpeed() - t0.getSpeed());
+            }
+        });
+    }
 
-        BaseHero hero6 = new crossbowman();
-        System.out.println(hero6.getInfo());
-
-        BaseHero hero7 = new monk();
-        System.out.println(hero7.getInfo());
+    static String getName() {
+        return String.valueOf(names.values()[new Random().nextInt(names.values().length - 1)]);
     }
 }

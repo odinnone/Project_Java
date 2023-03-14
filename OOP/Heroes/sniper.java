@@ -1,25 +1,18 @@
 package Heroes;
 
-public class sniper extends BaseHero {
-    
-    private int accuracy;
-    private int maxAccuracy;
-
-    public sniper() {
-        super(String.format("Hero_Sniper #%d", ++sniper.number),
-                sniper.r.nextInt(100, 200));
-        this.maxAccuracy = sniper.r.nextInt(50, 150);
-        this.accuracy = maxAccuracy;
+public class sniper extends shooter{
+    public sniper(String name, Vector2D coords) {
+        super(name, 60.f, 60, 10, 3, 5, 3,
+                9, 20, 10, coords.posX, coords.posY);
     }
 
-    public int Attack() {
-        int damage = BaseHero.r.nextInt(20, 30);
-        this.accuracy -= (int)(damage * 0.8);
-        if (accuracy < 0) return 0;
-        else return damage;
-    }
-
-    public String getInfo() {
-        return String.format("%s  Accuracy: %d", super.getInfo(), this.accuracy);
+    @Override
+    public StringBuilder getInfo() {
+        StringBuilder builder = new StringBuilder();
+        return builder.append("Снайпер:\t").append(sniper.super.name)
+                .append("\t| ATK:\t").append(sniper.super.attack)
+                .append("\t| HP:\t").append(sniper.super.hp)
+                .append(" \t| Arrows:").append(sniper.super.cartridges)
+                .append("\t|").append("\t| (X.Y) : ").append(sniper.super.coords.posX).append(".").append(sniper.super.coords.posY);
     }
 }
